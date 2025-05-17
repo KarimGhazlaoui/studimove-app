@@ -31,7 +31,8 @@ import {
   AvatarGroup,
   Tooltip,
   Stack,
-  LinearProgress
+  LinearProgress,
+  ListItemSecondaryAction
 } from '@mui/material';
 
 import {
@@ -97,6 +98,7 @@ const Transports: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [currentTransport, setCurrentTransport] = useState<Transport | null>(null);
   const [assignPassengersOpen, setAssignPassengersOpen] = useState(false);
+  const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -162,6 +164,14 @@ const Transports: React.FC = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const openParticipantsDialog = () => {
+    setParticipantsDialogOpen(true);
+  };
+  
+  const closeParticipantsDialog = () => {
+    setParticipantsDialogOpen(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -462,7 +472,7 @@ const Transports: React.FC = () => {
       </Dialog>
 
       {/* Dialogue pour ajouter des participants */}
-      <Dialog open={openParticipantsDialog} onClose={handleCloseParticipantsDialog} maxWidth="md" fullWidth>
+      <Dialog open={participantsDialogOpen} onClose={closeParticipantsDialog} maxWidth="md" fullWidth>
         <DialogTitle>
           Ajouter des participants au transport {currentTransport?.type} 
           {currentTransport && ` (${currentTransport.departureLocation} → ${currentTransport.arrivalLocation})`}
@@ -472,12 +482,12 @@ const Transports: React.FC = () => {
             Participants disponibles
           </Typography>
           <List>
-            {participants
+            {allPassengers
               .filter(participant => 
-                !currentTransport?.assignedParticipants.some(p => p.id === participant.id)
+                !currentTransport?.assignedPassengers.some(p => p.id === participant.id)
               )
               .map(participant => (
-                <ListItem button key={participant.id} onClick={() => handleAddParticipant(participant)}>
+                <ListItem button key={participant.id} onClick={() => handleTogglePassenger(participant.id)}>
                   <ListItemText 
                     primary={participant.name} 
                     secondary={`${participant.email} | ${participant.phone}`} 
@@ -490,7 +500,7 @@ const Transports: React.FC = () => {
             Participants assignés
           </Typography>
           <List>
-            {currentTransport?.assignedParticipants.map(participant => (
+            {currentTransport?.assignedPassengers.map(participant => (
               <ListItem key={participant.id}>
                 <ListItemText 
                   primary={participant.name} 
@@ -500,7 +510,7 @@ const Transports: React.FC = () => {
                   <IconButton 
                     edge="end" 
                     color="error"
-                    onClick={() => currentTransport && handleRemoveParticipant(currentTransport.id, participant.id)}
+                    onClick={() => handleTogglePassenger(participant.id)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -510,7 +520,14 @@ const Transports: React.FC = () => {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseParticipantsDialog}>Fermer</Button>
+          <Button onClick={closeParticipantsDialog}>Annuler</Button>
+          <Button 
+            onClick={handleSaveAssignedPassengers}
+            variant="contained" 
+            color="primary"
+          >
+            Enregistrer
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
