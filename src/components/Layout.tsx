@@ -1,42 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Box, Drawer, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemIcon, ListItemText, Avatar, IconButton } from '@mui/material';
+import { Dashboard as DashboardIcon, Event as EventIcon, Group as GroupIcon, Hotel as HotelIcon, DirectionsBus as TransportIcon, Description as DocumentIcon, Mail as CommunicationIcon, Settings as SettingsIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Box, Drawer, AppBar, Toolbar, List, Typography, Divider, ListItem, 
-  ListItemIcon, ListItemText, IconButton, Avatar, useMediaQuery, useTheme } from '@mui/material';
-import { 
-  Dashboard as DashboardIcon,
-  Event as EventIcon,
-  Group as GroupIcon,
-  Hotel as HotelIcon,
-  DirectionsBus as TransportIcon,
-  Description as DocumentIcon,
-  Mail as CommunicationIcon,
-  Settings as SettingsIcon,
-  Menu as MenuIcon
-} from '@mui/icons-material';
 
 const drawerWidth = 240;
+
+const menuItems = [
+  { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/' },
+  { text: 'Événements', icon: <EventIcon />, path: '/events' },
+  { text: 'Participants', icon: <GroupIcon />, path: '/participants' },
+  { text: 'Hébergements', icon: <HotelIcon />, path: '/accommodations' },
+  { text: 'Transports', icon: <TransportIcon />, path: '/transports' },
+  { text: 'Documents', icon: <DocumentIcon />, path: '/documents' },
+  { text: 'Communications', icon: <CommunicationIcon />, path: '/communications' },
+  { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
+];
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  const menuItems = [
-    { text: 'Tableau de bord', icon: <DashboardIcon />, path: '/' },
-    { text: 'Événements', icon: <EventIcon />, path: '/events' },
-    { text: 'Participants', icon: <GroupIcon />, path: '/participants' },
-    { text: 'Hébergements', icon: <HotelIcon />, path: '/accommodations' },
-    { text: 'Transports', icon: <TransportIcon />, path: '/transports' },
-    { text: 'Documents', icon: <DocumentIcon />, path: '/documents' },
-    { text: 'Communications', icon: <CommunicationIcon />, path: '/communications' },
-    { text: 'Paramètres', icon: <SettingsIcon />, path: '/settings' },
-  ];
 
   const drawer = (
     <div>
